@@ -1,1 +1,1 @@
-This is your sample file for working in git hub.
+This is your sample file
