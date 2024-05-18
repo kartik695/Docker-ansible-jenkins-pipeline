@@ -1,1 +1,1 @@
-This is your sample file for giy hub
+This is your sample file for git hub
