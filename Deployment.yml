@@ -1,0 +1,50 @@
+- name: Build and deploy Docker container
+  hosts: dockerservers
+  gather_facts: false
+  remote_user: root
+  tasks:
+    - name: Copy the files to the remote server
+      ansible.builtin.copy:
+        src: /var/lib/jenkins/workspace/ansible-jenkins-pipeline/
+        dest: /root/project
+
+
+    - name: Stopping the container
+      docker_container:
+        name: mico-container
+        image: mico:latest
+        ports:
+          - "80:80"
+        state: stopped
+
+    - name: Removing the container
+      docker_container:
+        name: mico-container
+        image: mico:latest
+        ports:
+          - "80:80"
+        state: absent
+
+    - name: Removing Docker image
+      docker_image:
+        name: mico:latest
+        state: absent
+
+
+
+    - name: Building Docker image
+      docker_image:
+        name: mico:latest
+        source: build
+        build:
+          path: /root
+          dockerfile: Dockerfile
+        state: present
+
+    - name: Starting the container
+      docker_container:
+        name: mico-container
+        image: mico:latest
+        ports:
+          - "80:80"
+        state: started
